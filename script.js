@@ -1,3 +1,13 @@
+// Logo click to scroll to top
+const logoLink = document.getElementById('logoLink');
+logoLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+});
+
 // Mobile Menu Toggle
 const hamburger = document.getElementById('hamburger');
 const navMenu = document.getElementById('navMenu');
