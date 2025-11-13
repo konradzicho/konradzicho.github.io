@@ -59,11 +59,32 @@ body {
     transform: scale(1.05);
 }
 
+.nav-brand-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    font-family: 'Georgia', 'Times New Roman', serif;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-style: italic;
+}
+
 .logo-img {
     height: 50px;
     width: auto;
     object-fit: contain;
     transition: var(--transition);
+}
+
+.hero-logo {
+    max-width: 400px;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    margin: 0 auto 2rem;
+    display: block;
+    filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.3));
+    animation: fadeInUp 1s ease;
 }
 
 .nav-right {
@@ -519,8 +540,13 @@ body {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .logo-img {
-        height: 40px;
+    .nav-brand-text {
+        font-size: 1.2rem;
+    }
+
+    .hero-logo {
+        max-width: 300px;
+        margin-bottom: 1.5rem;
     }
 
     .nav-right {
@@ -630,8 +656,13 @@ body {
 }
 
 @media (max-width: 480px) {
-    .logo-img {
-        height: 35px;
+    .nav-brand-text {
+        font-size: 1rem;
+    }
+
+    .hero-logo {
+        max-width: 250px;
+        margin-bottom: 1rem;
     }
 
     .nav-right {
