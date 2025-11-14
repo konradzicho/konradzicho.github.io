@@ -56,17 +56,38 @@ window.addEventListener('scroll', () => {
 // Smooth scroll for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        
-        if (target) {
-            const offsetTop = target.offsetTop - 80;
-            window.scrollTo({
-                top: offsetTop,
-                behavior: 'smooth'
-            });
+        const href = this.getAttribute('href');
+        // Only prevent default for same-page anchors
+        if (href.startsWith('#') && !href.includes('.')) {
+            e.preventDefault();
+            const target = document.querySelector(href);
+            
+            if (target) {
+                const offsetTop = target.offsetTop - 80;
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+            }
         }
     });
+});
+
+// Handle anchor links from other pages
+window.addEventListener('load', () => {
+    const hash = window.location.hash;
+    if (hash) {
+        setTimeout(() => {
+            const target = document.querySelector(hash);
+            if (target) {
+                const offsetTop = target.offsetTop - 80;
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+            }
+        }, 100);
+    }
 });
 
 // Contact Form Submission
@@ -156,6 +177,21 @@ window.addEventListener('scroll', () => {
                 }
             });
         }
+    });
+});
+
+// Service card expand/collapse functionality
+document.querySelectorAll('.service-card[data-service]').forEach(card => {
+    card.addEventListener('click', function() {
+        // Toggle active class on clicked card
+        this.classList.toggle('active');
+        
+        // Optional: Close other cards when one is opened
+        // document.querySelectorAll('.service-card[data-service]').forEach(otherCard => {
+        //     if (otherCard !== this) {
+        //         otherCard.classList.remove('active');
+        //     }
+        // });
     });
 });
 
