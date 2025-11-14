@@ -395,6 +395,9 @@ body {
     cursor: pointer;
     position: relative;
     overflow: hidden;
+    text-decoration: none;
+    display: block;
+    color: inherit;
 }
 
 .service-card:hover {
@@ -403,22 +406,9 @@ body {
     border-color: var(--secondary-color);
 }
 
-.service-card.active {
-    border-color: var(--secondary-color);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-}
-
 .service-description {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s ease, padding 0.5s ease;
     text-align: left;
-    padding: 0;
-}
-
-.service-card.active .service-description {
-    max-height: 1000px;
-    padding-top: 1.5rem;
+    padding-top: 1rem;
     margin-top: 1rem;
     border-top: 2px solid rgba(255, 107, 53, 0.2);
 }
@@ -430,9 +420,7 @@ body {
 }
 
 .service-artists {
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    display: none;
 }
 
 .placeholder-text {

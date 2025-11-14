@@ -1,12 +1,22 @@
-// Logo click to scroll to top
+// Logo click - navigate to index.html or scroll to top if already on index
 const logoLink = document.getElementById('logoLink');
-logoLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
+if (logoLink) {
+    logoLink.addEventListener('click', (e) => {
+        // Get current page filename
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        const isOnIndexPage = currentPage === 'index.html' || currentPage === '';
+        
+        if (isOnIndexPage) {
+            // On index.html, prevent default navigation and scroll to top
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+        // If not on index page, let the default link behavior navigate to index.html
     });
-});
+}
 
 // Mobile Menu Toggle
 const hamburger = document.getElementById('hamburger');
@@ -73,10 +83,48 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Handle anchor links from other pages
+// Handle anchor links from other pages and URL parameters
 window.addEventListener('load', () => {
     const hash = window.location.hash;
-    if (hash) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const serviceParam = urlParams.get('service');
+    
+    // Handle custom service form prefill
+    if (serviceParam === 'custom') {
+        const contactSection = document.getElementById('contact');
+        if (contactSection) {
+            setTimeout(() => {
+                const offsetTop = contactSection.offsetTop - 80;
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+                
+                // Prefill form
+                const form = document.getElementById('contactForm');
+                if (form) {
+                    const select = form.querySelector('select');
+                    const textarea = form.querySelector('textarea');
+                    
+                    if (select) {
+                        // Find and select "Custom Experience" option
+                        const options = select.querySelectorAll('option');
+                        options.forEach(option => {
+                            if (option.textContent.trim() === 'Custom Experience') {
+                                option.selected = true;
+                            }
+                        });
+                    }
+                    
+                    if (textarea) {
+                        // Prefill with helpful questions
+                        textarea.value = 'I\'m interested in a custom experience. Please tell me more about:\n\n- What type of event/space do you have in mind?\n- What atmosphere or theme are you envisioning?\n- What is your expected number of guests?\n- Are there any specific elements (music, dance, art, etc.) you\'d like to incorporate?\n\nThank you!';
+                    }
+                }
+            }, 300);
+        }
+    } else if (hash) {
+        // Handle regular anchor links
         setTimeout(() => {
             const target = document.querySelector(hash);
             if (target) {
@@ -180,18 +228,4 @@ window.addEventListener('scroll', () => {
     });
 });
 
-// Service card expand/collapse functionality
-document.querySelectorAll('.service-card[data-service]').forEach(card => {
-    card.addEventListener('click', function() {
-        // Toggle active class on clicked card
-        this.classList.toggle('active');
-        
-        // Optional: Close other cards when one is opened
-        // document.querySelectorAll('.service-card[data-service]').forEach(otherCard => {
-        //     if (otherCard !== this) {
-        //         otherCard.classList.remove('active');
-        //     }
-        // });
-    });
-});
 
