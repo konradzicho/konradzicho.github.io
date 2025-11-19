@@ -800,7 +800,7 @@ body {
 }
 
 /* Landscape orientation fixes for mobile devices */
-@media (max-width: 768px) and (orientation: landscape) {
+@media (orientation: landscape) and (max-height: 600px) {
     .hero {
         height: auto;
         min-height: 100vh;
@@ -828,13 +828,52 @@ body {
         font-size: 0.95rem;
     }
 
+    .navbar {
+        min-height: auto;
+    }
+
     .navbar .container {
-        padding: 0.75rem 20px;
+        padding: 0.4rem 12px;
+    }
+
+    .nav-brand-text {
+        font-size: 0.75rem !important;
+        white-space: nowrap;
+        line-height: 1.1;
+        letter-spacing: 0.02em;
+    }
+
+    .nav-right {
+        gap: 0.5rem;
+    }
+
+    .nav-social {
+        gap: 0.3rem;
+    }
+
+    .social-icon {
+        width: 28px;
+        height: 28px;
+        flex-shrink: 0;
+    }
+
+    .social-icon svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .hamburger {
+        margin-left: 0.3rem;
+    }
+
+    .hamburger span {
+        width: 20px;
+        height: 2px;
     }
 
     .nav-menu {
-        top: 60px;
-        max-height: calc(100vh - 60px);
+        top: 50px;
+        max-height: calc(100vh - 50px);
         overflow-y: auto;
     }
 
@@ -873,7 +912,7 @@ body {
 }
 
 /* Additional landscape fixes for smaller phones */
-@media (max-width: 480px) and (orientation: landscape) {
+@media (orientation: landscape) and (max-height: 500px) {
     .hero-logo {
         max-width: 150px;
         margin-bottom: 0.8rem;
@@ -894,22 +933,52 @@ body {
         font-size: 0.9rem;
     }
 
+    .navbar {
+        min-height: auto;
+    }
+
+    .navbar .container {
+        padding: 0.35rem 10px;
+    }
+
     .nav-brand-text {
-        font-size: 0.9rem;
+        font-size: 0.7rem !important;
+        white-space: nowrap;
+        line-height: 1.1;
+        letter-spacing: 0.02em;
     }
 
     .nav-right {
-        gap: 0.5rem;
+        gap: 0.3rem;
+    }
+
+    .nav-social {
+        gap: 0.25rem;
     }
 
     .social-icon {
-        width: 30px;
-        height: 30px;
+        width: 26px;
+        height: 26px;
+        flex-shrink: 0;
     }
 
     .social-icon svg {
-        width: 16px;
-        height: 16px;
+        width: 14px;
+        height: 14px;
+    }
+
+    .hamburger {
+        margin-left: 0.25rem;
+    }
+
+    .hamburger span {
+        width: 18px;
+        height: 2px;
+    }
+
+    .nav-menu {
+        top: 45px;
+        max-height: calc(100vh - 45px);
     }
 
     .section-title {
