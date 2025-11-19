@@ -799,6 +799,138 @@ body {
     }
 }
 
+/* Landscape orientation fixes for mobile devices */
+@media (max-width: 768px) and (orientation: landscape) {
+    .hero {
+        height: auto;
+        min-height: 100vh;
+        padding: 80px 0 40px;
+    }
+
+    .hero-logo {
+        max-width: 200px;
+        margin-bottom: 1rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .hero-description {
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+    }
+
+    .btn-cta {
+        padding: 0.8rem 2rem;
+        font-size: 0.95rem;
+    }
+
+    .navbar .container {
+        padding: 0.75rem 20px;
+    }
+
+    .nav-menu {
+        top: 60px;
+        max-height: calc(100vh - 60px);
+        overflow-y: auto;
+    }
+
+    .services {
+        padding: 60px 0;
+    }
+
+    .about {
+        padding: 60px 0;
+    }
+
+    .contact {
+        padding: 60px 0;
+    }
+
+    .section-title {
+        font-size: 1.75rem;
+        margin-bottom: 2rem;
+    }
+
+    .service-card {
+        padding: 1.5rem;
+    }
+
+    .mute-btn {
+        bottom: 15px;
+        right: 15px;
+        width: 40px;
+        height: 40px;
+    }
+
+    .mute-btn svg {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+/* Additional landscape fixes for smaller phones */
+@media (max-width: 480px) and (orientation: landscape) {
+    .hero-logo {
+        max-width: 150px;
+        margin-bottom: 0.8rem;
+    }
+
+    .hero-subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .hero-description {
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
+    }
+
+    .btn-cta {
+        padding: 0.7rem 1.5rem;
+        font-size: 0.9rem;
+    }
+
+    .nav-brand-text {
+        font-size: 0.9rem;
+    }
+
+    .nav-right {
+        gap: 0.5rem;
+    }
+
+    .social-icon {
+        width: 30px;
+        height: 30px;
+    }
+
+    .social-icon svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .service-card {
+        padding: 1.2rem;
+    }
+
+    .service-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .service-card h3 {
+        font-size: 1.2rem;
+    }
+}
+
 @media (max-width: 480px) {
     .nav-brand-text {
         font-size: 1rem;
