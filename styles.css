@@ -484,6 +484,12 @@ body {
     background: var(--white);
 }
 
+/* Hide sections temporarily (can be restored easily) */
+#weddings,
+#corporate-private {
+    display: none;
+}
+
 .talent-description {
     max-width: 800px;
     margin: 0 auto 3rem;
@@ -536,7 +542,7 @@ body {
 .talent-image-placeholder img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
     border-radius: 10px;
 }
 
@@ -583,6 +589,26 @@ body {
 .service-icon {
     font-size: 3rem;
     margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+}
+
+.service-icon svg {
+    width: 48px;
+    height: 48px;
+    stroke: var(--secondary-color);
+    color: var(--secondary-color);
+    fill: var(--secondary-color);
+    transition: var(--transition);
+}
+
+.service-card:hover .service-icon svg {
+    transform: scale(1.1);
+    stroke: var(--primary-color);
+    color: var(--primary-color);
+    fill: var(--primary-color);
 }
 
 .service-card h3 {
@@ -712,6 +738,9 @@ body {
     color: var(--white);
     text-decoration: none;
     transition: var(--transition);
+    opacity: 1;
+    visibility: visible;
+    cursor: pointer;
 }
 
 .back-to-top:hover {

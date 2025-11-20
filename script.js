@@ -22,10 +22,12 @@ if (logoLink) {
 const hamburger = document.getElementById('hamburger');
 const navMenu = document.getElementById('navMenu');
 
-hamburger.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
-    hamburger.classList.toggle('active');
-});
+if (hamburger && navMenu) {
+    hamburger.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
+        hamburger.classList.toggle('active');
+    });
+}
 
 // Dropdown functionality for mobile
 document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
@@ -63,8 +65,27 @@ window.addEventListener('scroll', () => {
     lastScroll = currentScroll;
 });
 
+// Back to Top Button (set up before smooth scroll handler to ensure it works)
+const backToTop = document.getElementById('backToTop');
+if (backToTop) {
+    backToTop.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+        return false;
+    }, true); // Use capture phase to run first
+}
+
 // Smooth scroll for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    // Skip back-to-top button (handled separately)
+    if (anchor.classList.contains('back-to-top') || anchor.id === 'backToTop') {
+        return;
+    }
+    
     anchor.addEventListener('click', function (e) {
         const href = this.getAttribute('href');
         // Only prevent default for same-page anchors
@@ -162,26 +183,6 @@ contactForm.addEventListener('submit', (e) => {
     contactForm.reset();
 });
 
-// Back to Top Button
-const backToTop = document.getElementById('backToTop');
-
-window.addEventListener('scroll', () => {
-    if (window.pageYOffset > 300) {
-        backToTop.style.opacity = '1';
-        backToTop.style.visibility = 'visible';
-    } else {
-        backToTop.style.opacity = '0';
-        backToTop.style.visibility = 'hidden';
-    }
-});
-
-backToTop.addEventListener('click', (e) => {
-    e.preventDefault();
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-});
 
 // Intersection Observer for fade-in animations
 const observerOptions = {
