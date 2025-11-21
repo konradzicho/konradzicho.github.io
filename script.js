@@ -32,12 +32,17 @@ if (hamburger && navMenu) {
 // Dropdown functionality for mobile
 document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
     toggle.addEventListener('click', (e) => {
-        // Only prevent default and toggle on mobile
-        if (window.innerWidth <= 768) {
+        // Only toggle dropdowns in portrait mode (vertical view)
+        // In landscape mode, links should work normally
+        const isMobile = window.innerWidth <= 768;
+        const isPortrait = window.innerHeight > window.innerWidth;
+        
+        if (isMobile && isPortrait) {
             e.preventDefault();
             const dropdown = toggle.parentElement;
             dropdown.classList.toggle('active');
         }
+        // In landscape mode, let the link work normally (don't prevent default)
     });
 });
 
@@ -241,17 +246,118 @@ window.addEventListener('scroll', () => {
     });
 });
 
-// Mute/Unmute video
+// Mute/Unmute and Volume Control
 const video = document.getElementById('bg-video');
 const muteBtn = document.getElementById('mute-btn');
 
 if (video && muteBtn) {
-    muteBtn.addEventListener('click', () => {
-        video.muted = !video.muted;
-        if (video.muted) {
+    // Initialize volume to 0.5 (50%)
+    video.volume = 0.5;
+    
+    // Create volume slider
+    const volumeSlider = document.createElement('input');
+    volumeSlider.type = 'range';
+    volumeSlider.min = '0';
+    volumeSlider.max = '1';
+    volumeSlider.step = '0.1';
+    volumeSlider.value = '0.5';
+    volumeSlider.className = 'volume-slider';
+    volumeSlider.style.display = 'none';
+    muteBtn.parentElement.appendChild(volumeSlider);
+    
+    // Update button icon based on volume and mute state
+    function updateButtonIcon() {
+        if (video.muted || video.volume === 0) {
             muteBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-volume-x"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="1" x2="17" y2="7"></line><line x1="17" y1="1" x2="23" y2="7"></line></svg>`;
+        } else if (video.volume < 0.5) {
+            muteBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-volume-1"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>`;
         } else {
             muteBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-volume-2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>`;
         }
+    }
+    
+    // Toggle mute/unmute on button click
+    muteBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (video.muted) {
+            video.muted = false;
+        } else {
+            video.muted = true;
+        }
+        updateButtonIcon();
     });
+    
+    // Show/hide volume slider on button click
+    let sliderTimeout;
+    muteBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (volumeSlider.style.display === 'none' || volumeSlider.style.display === '') {
+            volumeSlider.style.display = 'block';
+            clearTimeout(sliderTimeout);
+            sliderTimeout = setTimeout(() => {
+                volumeSlider.style.display = 'none';
+            }, 3000);
+        } else {
+            volumeSlider.style.display = 'none';
+            clearTimeout(sliderTimeout);
+        }
+    });
+    
+    // Update volume when slider changes
+    volumeSlider.addEventListener('input', (e) => {
+        video.volume = parseFloat(e.target.value);
+        if (video.volume > 0) {
+            video.muted = false;
+        }
+        updateButtonIcon();
+        clearTimeout(sliderTimeout);
+        sliderTimeout = setTimeout(() => {
+            volumeSlider.style.display = 'none';
+        }, 3000);
+    });
+    
+    // Prevent page scroll when dragging slider, but allow slider interaction
+    // The slider should work natively, we just need to prevent body scroll
+    let isInteracting = false;
+    
+    volumeSlider.addEventListener('mousedown', (e) => {
+        isInteracting = true;
+        document.body.style.overflow = 'hidden';
+    });
+    
+    volumeSlider.addEventListener('mouseup', (e) => {
+        isInteracting = false;
+        document.body.style.overflow = '';
+    });
+    
+    document.addEventListener('mouseup', () => {
+        if (isInteracting) {
+            isInteracting = false;
+            document.body.style.overflow = '';
+        }
+    });
+    
+    // For touch - prevent body scroll but allow slider to work
+    volumeSlider.addEventListener('touchstart', (e) => {
+        isInteracting = true;
+        document.body.style.overflow = 'hidden';
+    }, { passive: true });
+    
+    volumeSlider.addEventListener('touchend', (e) => {
+        isInteracting = false;
+        document.body.style.overflow = '';
+    }, { passive: true });
+    
+    // Ensure slider is interactive
+    volumeSlider.style.pointerEvents = 'auto';
+    
+    // Hide slider when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!muteBtn.contains(e.target) && !volumeSlider.contains(e.target)) {
+            volumeSlider.style.display = 'none';
+        }
+    });
+    
+    // Initialize button icon
+    updateButtonIcon();
 }

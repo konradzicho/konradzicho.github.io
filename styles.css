@@ -45,6 +45,7 @@ body {
     align-items: center;
     padding: 1rem 20px;
     gap: 1rem;
+    min-width: 0;
 }
 
 .nav-brand {
@@ -52,6 +53,8 @@ body {
     align-items: center;
     text-decoration: none;
     transition: var(--transition);
+    flex-shrink: 1;
+    min-width: 0;
 }
 
 .nav-brand:hover {
@@ -82,7 +85,7 @@ body {
     width: 100%;
     height: auto;
     object-fit: contain;
-    margin: 0 auto 2rem;
+    margin: 0 auto 1.5rem;
     display: block;
     filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.3));
     animation: fadeInUp 1s ease;
@@ -92,6 +95,7 @@ body {
     display: flex;
     align-items: center;
     gap: 1.5rem;
+    flex-shrink: 0;
 }
 
 .nav-social {
@@ -252,6 +256,10 @@ body {
     flex-direction: column;
     cursor: pointer;
     gap: 5px;
+    flex-shrink: 0;
+    min-width: 30px;
+    padding: 5px;
+    margin-left: 0.5rem;
 }
 
 .hamburger span {
@@ -259,6 +267,7 @@ body {
     height: 3px;
     background: var(--primary-color);
     transition: var(--transition);
+    flex-shrink: 0;
 }
 
 /* Hero Section */
@@ -283,6 +292,7 @@ body {
     height: auto;
     z-index: -1;
     transform: translateX(-50%) translateY(-50%);
+    object-fit: cover;
     background-size: cover;
 }
 
@@ -311,7 +321,7 @@ body {
     position: relative;
     z-index: 1;
     max-width: 800px;
-    padding: 0 20px;
+    padding: 100px 20px 40px;
     animation: fadeInUp 1s ease;
 }
 
@@ -367,7 +377,7 @@ body {
 
 .mute-btn {
     position: absolute;
-    bottom: 20px;
+    top: 90px;
     right: 20px;
     background: rgba(0, 0, 0, 0.5);
     border: none;
@@ -379,6 +389,116 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 10;
+    transition: var(--transition);
+}
+
+.mute-btn:hover {
+    background: rgba(0, 0, 0, 0.7);
+    transform: scale(1.1);
+}
+
+.mute-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
+.volume-slider {
+    position: absolute;
+    top: calc(90px + 50px + 2px);
+    right: calc(20px + 25px);
+    width: 100px;
+    height: 6px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    outline: none;
+    z-index: 11;
+    transform: rotate(-90deg) translateX(-50px);
+    transform-origin: right center;
+    margin: 0;
+    touch-action: pan-x;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    pointer-events: auto;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: white;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.volume-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: white;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
+@media (max-width: 768px) and (orientation: portrait) {
+    .hero-logo {
+        max-width: 300px;
+        margin-bottom: 1rem;
+    }
+
+    .hero-description {
+        margin-bottom: 1.5rem;
+    }
+
+    .volume-slider {
+        top: calc(75px + 45px + 2px);
+        right: calc(15px + 22.5px);
+        width: 80px;
+        transform: rotate(-90deg) translateX(-40px);
+        transform-origin: right center;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+    .hero-logo {
+        max-width: 200px;
+        margin-bottom: 0.75rem;
+    }
+
+    .hero-description {
+        margin-bottom: 1.25rem;
+    }
+
+    .volume-slider {
+        top: calc(70px + 40px + 2px);
+        right: calc(15px + 20px);
+        width: 80px;
+        transform: rotate(-90deg) translateX(-40px);
+        transform-origin: right center;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+    .hero-logo {
+        max-width: 150px;
+        margin-bottom: 0.6rem;
+    }
+
+    .hero-description {
+        margin-bottom: 0.8rem;
+    }
+
+    .volume-slider {
+        top: calc(65px + 38px + 2px);
+        right: calc(12px + 19px);
+        width: 70px;
+        transform: rotate(-90deg) translateX(-35px);
+        transform-origin: right center;
+    }
 }
 
 /* Services Section */
@@ -798,31 +918,40 @@ section#venues .services-grid {
     color: var(--secondary-color);
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .nav-brand-text {
-        font-size: 1.2rem;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .hero-logo {
-        max-width: 300px;
-        margin-bottom: 1.5rem;
-    }
-
-    .nav-right {
+/* Responsive Design - Portrait mode only */
+@media (max-width: 768px) and (orientation: portrait) {
+    .navbar .container {
+        padding: 1rem 15px;
         gap: 1rem;
     }
 
+    .nav-brand {
+        margin-right: 1.5rem;
+    }
+
+    .nav-brand-text {
+        font-size: 1.1rem;
+        white-space: nowrap;
+        overflow: visible;
+        text-overflow: clip;
+        max-width: none;
+    }
+
+
+    .nav-right {
+        gap: 0.4rem;
+        flex-shrink: 0;
+    }
+
     .nav-social {
-        gap: 0.5rem;
+        gap: 0 !important;
+        flex-shrink: 0;
     }
 
     .social-icon {
         width: 35px;
         height: 35px;
+        flex-shrink: 0;
     }
 
     .social-icon svg {
@@ -832,6 +961,9 @@ section#venues .services-grid {
 
     .hamburger {
         display: flex;
+        flex-shrink: 0;
+        min-width: 30px;
+        margin-left: 0.2rem;
     }
 
     .nav-menu {
@@ -845,7 +977,7 @@ section#venues .services-grid {
         text-align: left;
         transition: 0.3s;
         box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
-        padding: 2rem 0;
+        padding: 0;
         align-items: stretch;
         gap: 0;
         overflow-x: hidden;
@@ -866,9 +998,13 @@ section#venues .services-grid {
         border-bottom: 1px solid #e0e0e0;
     }
 
+    .nav-menu > li:last-child {
+        border-bottom: none;
+    }
+
     .nav-menu > li > a {
         padding: 1rem 2rem;
-        justify-content: space-between;
+        justify-content: flex-start;
     }
 
     .nav-menu > li > a::after {
@@ -876,7 +1012,12 @@ section#venues .services-grid {
     }
 
     .dropdown-arrow {
-        display: none;
+        display: inline-block !important;
+    }
+
+    .dropdown-toggle {
+        pointer-events: auto;
+        justify-content: space-between;
     }
 
     .dropdown-menu {
@@ -891,6 +1032,8 @@ section#venues .services-grid {
         max-height: 0;
         overflow: hidden;
         transition: max-height 0.3s ease;
+        display: block;
+        padding: 0;
     }
 
     .dropdown.active .dropdown-menu {
@@ -899,10 +1042,7 @@ section#venues .services-grid {
 
     .dropdown-menu a {
         padding: 0.75rem 3rem;
-    }
-
-    .dropdown-arrow {
-        display: inline-block;
+        display: block;
     }
 
     .hero-title {
@@ -915,6 +1055,21 @@ section#venues .services-grid {
 
     .hero-description {
         font-size: 1rem;
+    }
+
+    .hero-content {
+        padding: 90px 20px 40px;
+    }
+
+    .mute-btn {
+        width: 35px;
+        height: 35px;
+        margin-left: 0.3rem;
+    }
+
+    .mute-btn svg {
+        width: 18px;
+        height: 18px;
     }
 
     .services-grid {
@@ -942,7 +1097,7 @@ section#venues .services-grid {
 /* Landscape orientation fixes for mobile devices */
 @media (orientation: landscape) and (max-height: 600px) {
     .dropdown-arrow {
-        display: none;
+        display: none !important;
     }
 
     .nav-menu > li {
@@ -953,15 +1108,25 @@ section#venues .services-grid {
         display: none !important;
     }
     .hero {
-        height: auto;
+        height: 100vh;
         min-height: 100vh;
-        padding: 80px 0 40px;
+        max-height: 100vh;
+        padding: 0;
+        overflow: hidden;
     }
 
-    .hero-logo {
-        max-width: 200px;
-        margin-bottom: 1rem;
+    #bg-video {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+        min-width: 100%;
+        min-height: 100%;
     }
+
+    .hero-content {
+        padding: 60px 20px 30px;
+    }
+
 
     .hero-subtitle {
         font-size: 1rem;
@@ -979,27 +1144,49 @@ section#venues .services-grid {
         font-size: 0.95rem;
     }
 
+    .mute-btn {
+        top: 70px;
+        right: 15px;
+        width: 40px;
+        height: 40px;
+    }
+
+    .mute-btn svg {
+        width: 18px;
+        height: 18px;
+    }
+
     .navbar {
         min-height: auto;
     }
 
     .navbar .container {
-        padding: 0.4rem 12px;
+        padding: 0.5rem 15px;
+        gap: 1rem;
+        flex-wrap: nowrap;
+    }
+
+    .nav-brand {
+        flex-shrink: 0;
     }
 
     .nav-brand-text {
-        font-size: 0.75rem !important;
+        font-size: 1rem !important;
         white-space: nowrap;
-        line-height: 1.1;
+        line-height: 1.2;
         letter-spacing: 0.02em;
+        max-width: none !important;
+        overflow: visible !important;
     }
 
     .nav-right {
-        gap: 0.5rem;
+        gap: 0.75rem;
+        flex-shrink: 0;
     }
 
     .nav-social {
-        gap: 0.3rem;
+        gap: 0.4rem;
+        flex-shrink: 0;
     }
 
     .social-icon {
@@ -1014,24 +1201,39 @@ section#venues .services-grid {
     }
 
     .hamburger {
-        margin-left: 0.3rem;
-    }
-
-    .hamburger span {
-        width: 20px;
-        height: 2px;
+        display: none !important;
     }
 
     .nav-menu {
-        top: 50px;
-        max-height: calc(100vh - 50px);
-        overflow-y: auto;
-        overflow-x: hidden;
-        scrollbar-width: none; /* Firefox */
-        -ms-overflow-style: none; /* IE/Edge */
-        box-shadow: none;
-        padding-right: 0;
-        padding-left: 0;
+        position: static !important;
+        flex-direction: row !important;
+        background: transparent !important;
+        width: auto !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        align-items: center !important;
+        gap: 1rem !important;
+        top: auto !important;
+        right: auto !important;
+        left: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        flex-shrink: 1;
+        min-width: 0;
+    }
+
+    .nav-menu > li {
+        flex-shrink: 0;
+        white-space: nowrap;
+    }
+
+    .nav-menu > li > a {
+        white-space: nowrap;
+        font-size: 0.85rem;
+    }
+
+    .nav-menu.active {
+        right: auto !important;
     }
 
     .nav-menu::-webkit-scrollbar {
@@ -1048,6 +1250,19 @@ section#venues .services-grid {
 
     .nav-menu > li > a {
         border-bottom: none;
+        padding: 0.5rem 0 !important;
+    }
+
+    .nav-menu > li > a::after {
+        display: block !important;
+    }
+
+    .dropdown-menu {
+        display: none !important;
+    }
+
+    .dropdown-toggle {
+        pointer-events: auto !important;
     }
 
     .services {
@@ -1071,23 +1286,12 @@ section#venues .services-grid {
         padding: 1.5rem;
     }
 
-    .mute-btn {
-        bottom: 15px;
-        right: 15px;
-        width: 40px;
-        height: 40px;
-    }
-
-    .mute-btn svg {
-        width: 18px;
-        height: 18px;
-    }
 }
 
 /* Additional landscape fixes for smaller phones */
 @media (orientation: landscape) and (max-height: 500px) {
     .dropdown-arrow {
-        display: none;
+        display: none !important;
     }
 
     .nav-menu > li {
@@ -1097,9 +1301,29 @@ section#venues .services-grid {
     .nav-menu > li > a::after {
         display: none !important;
     }
+    .hero {
+        height: 100vh;
+        min-height: 100vh;
+        max-height: 100vh;
+        padding: 0;
+        overflow: hidden;
+    }
+
+    #bg-video {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+        min-width: 100%;
+        min-height: 100%;
+    }
+
+    .hero-content {
+        padding: 50px 20px 25px;
+    }
+
     .hero-logo {
         max-width: 150px;
-        margin-bottom: 0.8rem;
+        margin-bottom: 0.6rem;
     }
 
     .hero-subtitle {
@@ -1109,7 +1333,7 @@ section#venues .services-grid {
 
     .hero-description {
         font-size: 0.85rem;
-        margin-bottom: 1rem;
+        margin-bottom: 0.8rem;
     }
 
     .btn-cta {
@@ -1117,27 +1341,49 @@ section#venues .services-grid {
         font-size: 0.9rem;
     }
 
+    .mute-btn {
+        top: 65px;
+        right: 12px;
+        width: 38px;
+        height: 38px;
+    }
+
+    .mute-btn svg {
+        width: 16px;
+        height: 16px;
+    }
+
     .navbar {
         min-height: auto;
     }
 
     .navbar .container {
-        padding: 0.35rem 10px;
+        padding: 0.4rem 12px;
+        gap: 0.75rem;
+        flex-wrap: nowrap;
+    }
+
+    .nav-brand {
+        flex-shrink: 0;
     }
 
     .nav-brand-text {
-        font-size: 0.7rem !important;
+        font-size: 0.9rem !important;
         white-space: nowrap;
-        line-height: 1.1;
+        line-height: 1.2;
         letter-spacing: 0.02em;
+        max-width: none !important;
+        overflow: visible !important;
     }
 
     .nav-right {
-        gap: 0.3rem;
+        gap: 0.5rem;
+        flex-shrink: 0;
     }
 
     .nav-social {
-        gap: 0.25rem;
+        gap: 0.3rem;
+        flex-shrink: 0;
     }
 
     .social-icon {
@@ -1152,24 +1398,39 @@ section#venues .services-grid {
     }
 
     .hamburger {
-        margin-left: 0.25rem;
-    }
-
-    .hamburger span {
-        width: 18px;
-        height: 2px;
+        display: none !important;
     }
 
     .nav-menu {
-        top: 45px;
-        max-height: calc(100vh - 45px);
-        overflow-y: auto;
-        overflow-x: hidden;
-        scrollbar-width: none; /* Firefox */
-        -ms-overflow-style: none; /* IE/Edge */
-        box-shadow: none;
-        padding-right: 0;
-        padding-left: 0;
+        position: static !important;
+        flex-direction: row !important;
+        background: transparent !important;
+        width: auto !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        align-items: center !important;
+        gap: 0.75rem !important;
+        top: auto !important;
+        right: auto !important;
+        left: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        flex-shrink: 1;
+        min-width: 0;
+    }
+
+    .nav-menu > li {
+        flex-shrink: 0;
+        white-space: nowrap;
+    }
+
+    .nav-menu > li > a {
+        white-space: nowrap;
+        font-size: 0.8rem;
+    }
+
+    .nav-menu.active {
+        right: auto !important;
     }
 
     .nav-menu::-webkit-scrollbar {
@@ -1186,6 +1447,19 @@ section#venues .services-grid {
 
     .nav-menu > li > a {
         border-bottom: none;
+        padding: 0.5rem 0 !important;
+    }
+
+    .nav-menu > li > a::after {
+        display: block !important;
+    }
+
+    .dropdown-menu {
+        display: none !important;
+    }
+
+    .dropdown-toggle {
+        pointer-events: auto !important;
     }
 
     .section-title {
@@ -1207,13 +1481,18 @@ section#venues .services-grid {
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 480px) and (orientation: portrait) {
+    .navbar .container {
+        padding: 1rem 12px;
+        gap: 0.5rem;
+    }
+
     .nav-brand-text {
         font-size: 0.95rem;
         white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 200px;
+        overflow: visible;
+        text-overflow: clip;
+        max-width: none;
     }
 
     .hero-logo {
@@ -1222,21 +1501,37 @@ section#venues .services-grid {
     }
 
     .nav-right {
-        gap: 0.8rem;
+        gap: 0.5rem;
+        flex-shrink: 0;
     }
 
     .nav-social {
-        gap: 0.4rem;
+        gap: 0.3rem;
+        flex-shrink: 1;
     }
 
     .social-icon {
-        width: 32px;
-        height: 32px;
+        width: 30px;
+        height: 30px;
+        flex-shrink: 0;
     }
 
     .social-icon svg {
-        width: 18px;
-        height: 18px;
+        width: 16px;
+        height: 16px;
+    }
+
+    .hamburger {
+        display: flex;
+        flex-shrink: 0;
+        min-width: 30px;
+        margin-left: 0.25rem;
+        padding: 5px;
+    }
+
+    .hamburger span {
+        width: 22px;
+        height: 3px;
     }
 
     .hero-title {
