@@ -172,9 +172,21 @@ contactForm.addEventListener('submit', (e) => {
     const phone = contactForm.querySelector('input[type="tel"]').value;
     const message = contactForm.querySelector('textarea').value;
     
+    // Get GDPR consent
+    const gdprConsent = contactForm.querySelector('#gdpr-consent');
+    
     // Simple validation
     if (!name || !email || !message) {
         alert('Please fill in all required fields.');
+        return;
+    }
+    
+    // Validate GDPR consent
+    if (!gdprConsent || !gdprConsent.checked) {
+        alert('Please accept the Privacy Policy to continue.');
+        if (gdprConsent) {
+            gdprConsent.focus();
+        }
         return;
     }
     

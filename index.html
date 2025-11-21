@@ -42,7 +42,7 @@
                     <ul class="dropdown-menu">
                         <li><a href="workshops.html#painting">Painting</a></li>
                         <li><a href="workshops.html#perfume">Perfume</a></li>
-                        <li><a href="workshops.html#candles">Candles</a></li>
+                        <li style="display: none;"><a href="workshops.html#candles">Candles</a></li>
                         <li><a href="workshops.html#bachata-salsa">Bachata/Salsa</a></li>
                     </ul>
                 </li>
@@ -407,6 +407,14 @@
                             <option>Other</option>
                         </select>
                         <textarea placeholder="Tell us about your event, venue, or vision" rows="5" required></textarea>
+                        <div class="gdpr-consent">
+                            <label for="gdpr-consent" class="gdpr-label">
+                                <input type="checkbox" id="gdpr-consent" name="gdpr-consent" required>
+                                <span class="gdpr-text">
+                                    I agree to the <a href="privacy.html" target="_blank">Privacy Policy</a> and consent to the processing of my personal data for the purpose of responding to my inquiry. I understand that I can withdraw my consent at any time.
+                                </span>
+                            </label>
+                        </div>
                         <button type="submit" class="btn-cta">Request Quote</button>
                     </form>
                 </div>
