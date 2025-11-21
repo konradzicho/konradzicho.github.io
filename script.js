@@ -29,34 +29,30 @@ if (hamburger && navMenu) {
     });
 }
 
-// Dropdown functionality for mobile
+// Close mobile menu when clicking outside
+document.addEventListener('click', (e) => {
+    if (hamburger && navMenu && !hamburger.contains(e.target) && !navMenu.contains(e.target)) {
+        navMenu.classList.remove('active');
+        hamburger.classList.remove('active');
+    }
+});
+
+// Dropdown functionality - only prevent default in portrait mode
 document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
     toggle.addEventListener('click', (e) => {
-        // Only toggle dropdowns in portrait mode (vertical view)
-        // In landscape mode, links should work normally
-        const isMobile = window.innerWidth <= 768;
-        const isPortrait = window.innerHeight > window.innerWidth;
-        
-        if (isMobile && isPortrait) {
+        // Only prevent default and toggle dropdowns in portrait mode
+        if (window.matchMedia("(orientation: portrait)").matches) {
             e.preventDefault();
             const dropdown = toggle.parentElement;
             dropdown.classList.toggle('active');
         }
-        // In landscape mode, let the link work normally (don't prevent default)
-    });
-});
-
-// Close mobile menu when clicking on a link (but not dropdown toggles)
-document.querySelectorAll('.nav-menu a:not(.dropdown-toggle)').forEach(link => {
-    link.addEventListener('click', () => {
-        navMenu.classList.remove('active');
-        hamburger.classList.remove('active');
+        // In landscape mode, let the link navigate normally
     });
 });
 
 // Navbar scroll effect
-let lastScroll = 0;
 const navbar = document.querySelector('.navbar');
+let lastScroll = 0;
 
 window.addEventListener('scroll', () => {
     const currentScroll = window.pageYOffset;
@@ -76,6 +72,7 @@ if (backToTop) {
     backToTop.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
+
         window.scrollTo({
             top: 0,
             behavior: 'smooth'
@@ -143,14 +140,13 @@ window.addEventListener('load', () => {
                     }
                     
                     if (textarea) {
-                        // Prefill with helpful questions
-                        textarea.value = 'I\'m interested in a custom experience. Please tell me more about:\n\n- What type of event/space do you have in mind?\n- What atmosphere or theme are you envisioning?\n- What is your expected number of guests?\n- Are there any specific elements (music, dance, art, etc.) you\'d like to incorporate?\n\nThank you!';
+                        textarea.value = 'I would like to request a custom experience.';
                     }
                 }
-            }, 300);
+            }, 100);
         }
     } else if (hash) {
-        // Handle regular anchor links
+        // Handle anchor links from other pages
         setTimeout(() => {
             const target = document.querySelector(hash);
             if (target) {
@@ -164,42 +160,27 @@ window.addEventListener('load', () => {
     }
 });
 
-// Contact Form Submission
+// Contact Form Handling
 const contactForm = document.getElementById('contactForm');
-
-contactForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    
-    // Get form values
-    const formData = new FormData(contactForm);
-    const name = contactForm.querySelector('input[type="text"]').value;
-    const email = contactForm.querySelector('input[type="email"]').value;
-    const phone = contactForm.querySelector('input[type="tel"]').value;
-    const message = contactForm.querySelector('textarea').value;
-    
-    // Get GDPR consent
-    const gdprConsent = contactForm.querySelector('#gdpr-consent');
-    
-    // Simple validation
-    if (!name || !email || !message) {
-        alert('Please fill in all required fields.');
-        return;
-    }
-    
-    // Validate GDPR consent
-    if (!gdprConsent || !gdprConsent.checked) {
-        alert('Please accept the Privacy Policy to continue.');
-        if (gdprConsent) {
-            gdprConsent.focus();
+if (contactForm) {
+    contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData(contactForm);
+        const data = Object.fromEntries(formData);
+        
+        // Basic validation
+        if (!data.name || !data.email || !data.message) {
+            alert('Please fill in all required fields.');
+            return;
         }
-        return;
-    }
-    
-    // Simulate form submission (replace with actual API call)
-    alert(`Thank you, ${name}! We'll be in touch soon.`);
-    contactForm.reset();
-});
-
+        
+        // Here you would typically send the data to a server
+        // For now, we'll just show a success message
+        alert('Thank you for your message! We will get back to you soon.');
+        contactForm.reset();
+    });
+}
 
 // Intersection Observer for fade-in animations
 const observerOptions = {
@@ -236,128 +217,222 @@ window.addEventListener('scroll', () => {
         const sectionId = section.getAttribute('id');
 
         if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-            document.querySelectorAll('.nav-menu a').forEach(link => {
+            document.querySelectorAll('.nav-menu a[href*="#' + sectionId + '"]').forEach(link => {
+                link.classList.add('active');
+            });
+        } else {
+            document.querySelectorAll('.nav-menu a[href*="#' + sectionId + '"]').forEach(link => {
                 link.classList.remove('active');
-                if (link.getAttribute('href') === `#${sectionId}`) {
-                    link.classList.add('active');
-                }
             });
         }
     });
 });
 
-// Mute/Unmute and Volume Control
-const video = document.getElementById('bg-video');
-const muteBtn = document.getElementById('mute-btn');
-
-if (video && muteBtn) {
-    // Initialize volume to 0.5 (50%)
-    video.volume = 0.5;
+// Mute/Unmute and Volume Control - SIMPLIFIED AND FIXED
+(function initVideo() {
+    const video = document.getElementById('bg-video');
+    const muteBtn = document.getElementById('mute-btn');
     
-    // Create volume slider
-    const volumeSlider = document.createElement('input');
-    volumeSlider.type = 'range';
-    volumeSlider.min = '0';
-    volumeSlider.max = '1';
-    volumeSlider.step = '0.1';
-    volumeSlider.value = '0.5';
-    volumeSlider.className = 'volume-slider';
-    volumeSlider.style.display = 'none';
-    muteBtn.parentElement.appendChild(volumeSlider);
+    if (!video) {
+        // Try again after a short delay if video not found
+        setTimeout(initVideo, 100);
+        return;
+    }
     
-    // Update button icon based on volume and mute state
-    function updateButtonIcon() {
-        if (video.muted || video.volume === 0) {
-            muteBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-volume-x"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="1" x2="17" y2="7"></line><line x1="17" y1="1" x2="23" y2="7"></line></svg>`;
-        } else if (video.volume < 0.5) {
-            muteBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-volume-1"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>`;
-        } else {
-            muteBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-volume-2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>`;
+    // Load saved state
+    const savedVolume = localStorage.getItem('videoVolume');
+    const savedMuted = localStorage.getItem('videoMuted');
+    const savedTime = localStorage.getItem('videoTime');
+    
+    // Set volume
+    if (savedVolume) {
+        video.volume = parseFloat(savedVolume);
+    } else {
+        video.volume = 0.5;
+        localStorage.setItem('videoVolume', '0.5');
+    }
+    
+    // Set muted state
+    if (savedMuted === 'false') {
+        video.muted = false;
+    } else {
+        video.muted = true; // Default muted for autoplay
+        if (!savedMuted) {
+            localStorage.setItem('videoMuted', 'true');
         }
     }
     
-    // Toggle mute/unmute on button click
-    muteBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (video.muted) {
-            video.muted = false;
-        } else {
-            video.muted = true;
+    // Preload video for faster loading
+    video.preload = 'auto';
+    
+    // Function to restore video time and play immediately
+    const restoreTimeAndPlay = () => {
+        if (savedTime && video.duration && video.duration > 0) {
+            const time = parseFloat(savedTime);
+            if (!isNaN(time) && time >= 0 && time < video.duration) {
+                try {
+                    video.currentTime = time;
+                } catch (e) {
+                    // Ignore errors
+                }
+            }
         }
-        updateButtonIcon();
+        // Play immediately
+        if (video.paused) {
+            video.play().catch(() => {});
+        }
+    };
+    
+    // Set up video for seamless playback
+    const setupVideo = () => {
+        if (video.readyState >= 4) {
+            // Video is fully loaded
+            restoreTimeAndPlay();
+        } else if (video.readyState >= 2) {
+            // Video has metadata
+            if (video.duration > 0) {
+                restoreTimeAndPlay();
+            } else {
+                // Wait for duration
+                setTimeout(setupVideo, 10);
+            }
+        } else {
+            // Wait for video to load
+            setTimeout(setupVideo, 10);
+        }
+    };
+    
+    // Try immediately
+    setupVideo();
+    
+    // Listen for metadata - set time as soon as possible
+    video.addEventListener('loadedmetadata', () => {
+        if (video.duration > 0 && savedTime) {
+            const time = parseFloat(savedTime);
+            if (!isNaN(time) && time >= 0 && time < video.duration) {
+                video.currentTime = time;
+            }
+        }
+        // Try to play
+        video.play().catch(() => {});
+    }, { once: true });
+    
+    // Listen for canplay - video is ready to play
+    video.addEventListener('canplay', () => {
+        restoreTimeAndPlay();
+    }, { once: true });
+    
+    // Also listen for loadeddata
+    video.addEventListener('loadeddata', () => {
+        restoreTimeAndPlay();
+    }, { once: true });
+    
+    // Aggressive play attempts for seamless transition
+    let playAttempts = 0;
+    const tryPlay = () => {
+        if (video.paused && playAttempts < 10) {
+            playAttempts++;
+            video.play().catch(() => {
+                setTimeout(tryPlay, 50);
+            });
+        }
+    };
+    
+    // Try playing multiple times
+    tryPlay();
+    setTimeout(tryPlay, 50);
+    setTimeout(tryPlay, 100);
+    setTimeout(tryPlay, 200);
+    
+    // Save time continuously
+    video.addEventListener('timeupdate', () => {
+        if (video.readyState >= 2) {
+            localStorage.setItem('videoTime', video.currentTime.toString());
+        }
     });
     
-    // Show/hide volume slider on button click
-    let sliderTimeout;
-    muteBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (volumeSlider.style.display === 'none' || volumeSlider.style.display === '') {
-            volumeSlider.style.display = 'block';
-            clearTimeout(sliderTimeout);
-            sliderTimeout = setTimeout(() => {
+    // Save on unload
+    window.addEventListener('beforeunload', () => {
+        if (video.readyState >= 2) {
+            localStorage.setItem('videoTime', video.currentTime.toString());
+        }
+    });
+    
+    // Mute button handling
+    if (muteBtn) {
+        // Ensure button is visible
+        muteBtn.style.display = 'flex';
+        muteBtn.style.visibility = 'visible';
+        muteBtn.style.opacity = '1';
+        
+        // Update button icon
+        const updateIcon = () => {
+            if (video.muted || video.volume === 0) {
+                muteBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-volume-x"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="1" x2="17" y2="7"></line><line x1="17" y1="1" x2="23" y2="7"></line></svg>`;
+            } else if (video.volume < 0.5) {
+                muteBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-volume-1"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>`;
+            } else {
+                muteBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-volume-2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>`;
+            }
+        };
+        
+        updateIcon();
+        
+        // Create volume slider
+        const volumeSlider = document.createElement('input');
+        volumeSlider.type = 'range';
+        volumeSlider.min = '0';
+        volumeSlider.max = '1';
+        volumeSlider.step = '0.1';
+        volumeSlider.value = video.volume;
+        volumeSlider.className = 'volume-slider';
+        volumeSlider.style.display = 'none';
+        muteBtn.parentElement.appendChild(volumeSlider);
+        
+        // Toggle mute on click
+        muteBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            video.muted = !video.muted;
+            localStorage.setItem('videoMuted', video.muted);
+            updateIcon();
+            
+            // Toggle slider
+            if (volumeSlider.style.display === 'none' || volumeSlider.style.display === '') {
+                volumeSlider.style.display = 'block';
+                clearTimeout(window.sliderTimeout);
+                window.sliderTimeout = setTimeout(() => {
+                    volumeSlider.style.display = 'none';
+                }, 3000);
+            } else {
+                volumeSlider.style.display = 'none';
+                clearTimeout(window.sliderTimeout);
+            }
+        });
+        
+        // Volume slider
+        volumeSlider.addEventListener('input', (e) => {
+            video.volume = parseFloat(e.target.value);
+            if (video.volume > 0) {
+                video.muted = false;
+            }
+            localStorage.setItem('videoVolume', video.volume);
+            localStorage.setItem('videoMuted', video.muted);
+            updateIcon();
+            clearTimeout(window.sliderTimeout);
+            window.sliderTimeout = setTimeout(() => {
                 volumeSlider.style.display = 'none';
             }, 3000);
-        } else {
-            volumeSlider.style.display = 'none';
-            clearTimeout(sliderTimeout);
-        }
-    });
-    
-    // Update volume when slider changes
-    volumeSlider.addEventListener('input', (e) => {
-        video.volume = parseFloat(e.target.value);
-        if (video.volume > 0) {
-            video.muted = false;
-        }
-        updateButtonIcon();
-        clearTimeout(sliderTimeout);
-        sliderTimeout = setTimeout(() => {
-            volumeSlider.style.display = 'none';
-        }, 3000);
-    });
-    
-    // Prevent page scroll when dragging slider, but allow slider interaction
-    // The slider should work natively, we just need to prevent body scroll
-    let isInteracting = false;
-    
-    volumeSlider.addEventListener('mousedown', (e) => {
-        isInteracting = true;
-        document.body.style.overflow = 'hidden';
-    });
-    
-    volumeSlider.addEventListener('mouseup', (e) => {
-        isInteracting = false;
-        document.body.style.overflow = '';
-    });
-    
-    document.addEventListener('mouseup', () => {
-        if (isInteracting) {
-            isInteracting = false;
+        });
+        
+        // Prevent scroll when dragging
+        volumeSlider.addEventListener('mousedown', () => {
+            document.body.style.overflow = 'hidden';
+        });
+        volumeSlider.addEventListener('mouseup', () => {
             document.body.style.overflow = '';
-        }
-    });
-    
-    // For touch - prevent body scroll but allow slider to work
-    volumeSlider.addEventListener('touchstart', (e) => {
-        isInteracting = true;
-        document.body.style.overflow = 'hidden';
-    }, { passive: true });
-    
-    volumeSlider.addEventListener('touchend', (e) => {
-        isInteracting = false;
-        document.body.style.overflow = '';
-    }, { passive: true });
-    
-    // Ensure slider is interactive
-    volumeSlider.style.pointerEvents = 'auto';
-    
-    // Hide slider when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!muteBtn.contains(e.target) && !volumeSlider.contains(e.target)) {
-            volumeSlider.style.display = 'none';
-        }
-    });
-    
-    // Initialize button icon
-    updateButtonIcon();
-}
+        });
+        document.addEventListener('mouseup', () => {
+            document.body.style.overflow = '';
+        });
+    }
+})();

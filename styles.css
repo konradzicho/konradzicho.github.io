@@ -393,6 +393,16 @@ body {
     transition: var(--transition);
 }
 
+.page-header .mute-btn {
+    top: 90px;
+    right: 20px;
+    z-index: 1000 !important;
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: absolute !important;
+}
+
 .mute-btn:hover {
     background: rgba(0, 0, 0, 0.7);
     transform: scale(1.1);
@@ -423,6 +433,12 @@ body {
     -webkit-user-select: none;
     user-select: none;
     pointer-events: auto;
+}
+
+.page-header .volume-slider {
+    top: calc(90px + 50px + 2px);
+    right: calc(20px + 25px);
+    z-index: 11;
 }
 
 .volume-slider::-webkit-slider-thumb {
@@ -461,6 +477,21 @@ body {
         transform: rotate(-90deg) translateX(-40px);
         transform-origin: right center;
     }
+
+    .page-header .mute-btn {
+        top: 75px;
+        right: 15px;
+        width: 45px;
+        height: 45px;
+    }
+
+    .page-header .volume-slider {
+        top: calc(75px + 45px + 2px);
+        right: calc(15px + 22.5px);
+        width: 80px;
+        transform: rotate(-90deg) translateX(-40px);
+        transform-origin: right center;
+    }
 }
 
 @media (orientation: landscape) and (max-height: 600px) {
@@ -480,6 +511,21 @@ body {
         transform: rotate(-90deg) translateX(-40px);
         transform-origin: right center;
     }
+
+    .page-header .mute-btn {
+        top: 70px;
+        right: 15px;
+        width: 40px;
+        height: 40px;
+    }
+
+    .page-header .volume-slider {
+        top: calc(70px + 40px + 2px);
+        right: calc(15px + 20px);
+        width: 80px;
+        transform: rotate(-90deg) translateX(-40px);
+        transform-origin: right center;
+    }
 }
 
 @media (orientation: landscape) and (max-height: 500px) {
@@ -493,6 +539,21 @@ body {
     }
 
     .volume-slider {
+        top: calc(65px + 38px + 2px);
+        right: calc(12px + 19px);
+        width: 70px;
+        transform: rotate(-90deg) translateX(-35px);
+        transform-origin: right center;
+    }
+
+    .page-header .mute-btn {
+        top: 65px;
+        right: 12px;
+        width: 38px;
+        height: 38px;
+    }
+
+    .page-header .volume-slider {
         top: calc(65px + 38px + 2px);
         right: calc(12px + 19px);
         width: 70px;
@@ -592,10 +653,42 @@ section#venues .services-grid {
 
 /* Page Header */
 .page-header {
+    position: relative;
     padding: 120px 0 60px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: transparent;
     color: var(--white);
     text-align: center;
+    overflow: hidden;
+    min-height: 300px;
+}
+
+.page-header video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.page-header .page-header-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1;
+}
+
+.page-header .container {
+    position: relative;
+    z-index: 2;
 }
 
 .page-title {
