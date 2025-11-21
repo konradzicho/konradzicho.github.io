@@ -67,6 +67,7 @@ body {
     letter-spacing: 0.03em;
     text-transform: none;
     font-style: normal;
+    white-space: nowrap;
 }
 
 .logo-img {
@@ -486,7 +487,8 @@ body {
 
 /* Hide sections temporarily (can be restored easily) */
 #weddings,
-#corporate-private {
+#corporate-private,
+#candles {
     display: none;
 }
 
@@ -751,6 +753,9 @@ body {
 @media (max-width: 768px) {
     .nav-brand-text {
         font-size: 1.2rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .hero-logo {
@@ -782,7 +787,8 @@ body {
 
     .nav-menu {
         position: fixed;
-        left: -100%;
+        right: -100%;
+        left: auto;
         top: 70px;
         flex-direction: column;
         background: var(--white);
@@ -793,10 +799,18 @@ body {
         padding: 2rem 0;
         align-items: stretch;
         gap: 0;
+        overflow-x: hidden;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE/Edge */
+    }
+
+    .nav-menu::-webkit-scrollbar {
+        display: none; /* Chrome/Safari */
     }
 
     .nav-menu.active {
-        left: 0;
+        right: 0;
+        left: auto;
     }
 
     .nav-menu > li {
@@ -806,6 +820,14 @@ body {
     .nav-menu > li > a {
         padding: 1rem 2rem;
         justify-content: space-between;
+    }
+
+    .nav-menu > li > a::after {
+        display: none;
+    }
+
+    .dropdown-arrow {
+        display: none;
     }
 
     .dropdown-menu {
@@ -866,6 +888,17 @@ body {
 
 /* Landscape orientation fixes for mobile devices */
 @media (orientation: landscape) and (max-height: 600px) {
+    .dropdown-arrow {
+        display: none;
+    }
+
+    .nav-menu > li {
+        border-bottom: none !important;
+    }
+
+    .nav-menu > li > a::after {
+        display: none !important;
+    }
     .hero {
         height: auto;
         min-height: 100vh;
@@ -940,6 +973,28 @@ body {
         top: 50px;
         max-height: calc(100vh - 50px);
         overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE/Edge */
+        box-shadow: none;
+        padding-right: 0;
+        padding-left: 0;
+    }
+
+    .nav-menu::-webkit-scrollbar {
+        display: none; /* Chrome/Safari */
+    }
+
+    .nav-menu > li {
+        border-bottom: none !important;
+    }
+
+    .nav-menu > li > a::after {
+        display: none !important;
+    }
+
+    .nav-menu > li > a {
+        border-bottom: none;
     }
 
     .services {
@@ -978,6 +1033,17 @@ body {
 
 /* Additional landscape fixes for smaller phones */
 @media (orientation: landscape) and (max-height: 500px) {
+    .dropdown-arrow {
+        display: none;
+    }
+
+    .nav-menu > li {
+        border-bottom: none !important;
+    }
+
+    .nav-menu > li > a::after {
+        display: none !important;
+    }
     .hero-logo {
         max-width: 150px;
         margin-bottom: 0.8rem;
@@ -1044,6 +1110,29 @@ body {
     .nav-menu {
         top: 45px;
         max-height: calc(100vh - 45px);
+        overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE/Edge */
+        box-shadow: none;
+        padding-right: 0;
+        padding-left: 0;
+    }
+
+    .nav-menu::-webkit-scrollbar {
+        display: none; /* Chrome/Safari */
+    }
+
+    .nav-menu > li {
+        border-bottom: none !important;
+    }
+
+    .nav-menu > li > a::after {
+        display: none !important;
+    }
+
+    .nav-menu > li > a {
+        border-bottom: none;
     }
 
     .section-title {
@@ -1067,7 +1156,11 @@ body {
 
 @media (max-width: 480px) {
     .nav-brand-text {
-        font-size: 1rem;
+        font-size: 0.95rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px;
     }
 
     .hero-logo {
