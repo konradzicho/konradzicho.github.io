@@ -29,6 +29,126 @@ if (hamburger && navMenu) {
     });
 }
 
+// Dynamic menu overflow detection - show hamburger when menu items would overflow
+// Only applies in portrait mode or narrow screens, never overrides landscape CSS
+function checkMenuOverflow() {
+    const navbar = document.querySelector('.navbar .container');
+    const navBrand = document.querySelector('.nav-brand');
+    const navRight = document.querySelector('.nav-right');
+    const navMenu = document.getElementById('navMenu');
+    const hamburger = document.getElementById('hamburger');
+    
+    if (!navbar || !navBrand || !navRight || !navMenu || !hamburger) {
+        return;
+    }
+    
+    // Check if we're in landscape mode
+    const isLandscape = window.matchMedia("(orientation: landscape)").matches;
+    
+    // Check for medium-width landscape devices (like iPad Mini 1024x768) where menu might overflow
+    const isMediumLandscape = isLandscape && window.innerWidth >= 768 && window.innerWidth <= 1024 && window.innerHeight <= 768;
+    
+    // Get available width first (needed for both portrait and medium landscape checks)
+    const navbarWidth = navbar.offsetWidth;
+    const navBrandWidth = navBrand.offsetWidth;
+    const navRightWidth = navRight.offsetWidth;
+    
+    // Temporarily show menu to measure its width
+    const originalDisplay = navMenu.style.display;
+    const originalPosition = navMenu.style.position;
+    const originalVisibility = navMenu.style.visibility;
+    navMenu.style.display = 'flex';
+    navMenu.style.position = 'static';
+    navMenu.style.visibility = 'hidden';
+    navMenu.style.width = 'auto';
+    
+    const navMenuWidth = navMenu.scrollWidth || navMenu.offsetWidth;
+    
+    // Restore original styles
+    navMenu.style.display = originalDisplay;
+    navMenu.style.position = originalPosition;
+    navMenu.style.visibility = originalVisibility;
+    navMenu.style.width = '';
+    
+    // Calculate available width with safety margin
+    const availableWidth = navbarWidth - navBrandWidth - navRightWidth - 80; // 80px for padding/gaps
+    
+    // For medium landscape devices, check if menu would overflow
+    if (isMediumLandscape) {
+        if (navMenuWidth > availableWidth) {
+            // Menu would overflow, use hamburger
+            hamburger.style.display = 'flex';
+            hamburger.style.visibility = 'visible';
+            if (navMenu.style.position !== 'fixed') {
+                navMenu.style.display = 'none';
+            }
+            return;
+        } else {
+            // Menu fits, clear any inline styles and let CSS handle it
+            hamburger.style.display = '';
+            hamburger.style.visibility = '';
+            navMenu.style.display = '';
+            return;
+        }
+    }
+    
+    // For regular landscape (not medium-width), always respect CSS and never override
+    if (isLandscape) {
+        // Clear any inline styles we might have set previously
+        hamburger.style.display = '';
+        hamburger.style.visibility = '';
+        navMenu.style.display = '';
+        return;
+    }
+    
+    // Only check overflow in portrait mode
+    // Get computed styles to check current display state
+    const hamburgerComputed = window.getComputedStyle(hamburger);
+    const isHamburgerVisible = hamburgerComputed.display !== 'none';
+    
+    // If hamburger is already visible (via CSS), don't override
+    if (isHamburgerVisible) {
+        return;
+    }
+    
+    // Calculate if menu would overflow (navMenuWidth and availableWidth already calculated above)
+    const needsHamburger = navMenuWidth > availableWidth;
+    
+    // If menu would overflow in portrait mode, force hamburger menu
+    if (needsHamburger && !isHamburgerVisible) {
+        hamburger.style.display = 'flex';
+        hamburger.style.visibility = 'visible';
+        // Hide the menu if it's currently visible inline (only in portrait)
+        if (navMenu.style.position !== 'fixed') {
+            navMenu.style.display = 'none';
+        }
+    } else if (!needsHamburger) {
+        // Clear any inline styles we set if menu fits
+        hamburger.style.display = '';
+        hamburger.style.visibility = '';
+        navMenu.style.display = '';
+    }
+}
+
+// Check on load and resize
+let resizeTimeout;
+window.addEventListener('load', () => {
+    checkMenuOverflow();
+    // Check again after a delay to ensure all elements are rendered
+    setTimeout(checkMenuOverflow, 100);
+    setTimeout(checkMenuOverflow, 500);
+});
+
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(checkMenuOverflow, 100);
+});
+
+// Also check when orientation changes
+window.addEventListener('orientationchange', () => {
+    setTimeout(checkMenuOverflow, 200);
+});
+
 // Close mobile menu when clicking outside
 document.addEventListener('click', (e) => {
     if (hamburger && navMenu && !hamburger.contains(e.target) && !navMenu.contains(e.target)) {
@@ -357,6 +477,15 @@ window.addEventListener('scroll', () => {
             localStorage.setItem('videoTime', video.currentTime.toString());
         }
     });
+    
+    // Simple recovery check - only if video is clearly stuck after page load
+    let initialPlayAttempted = false;
+    setTimeout(() => {
+        if (video.paused && video.readyState >= 2 && !initialPlayAttempted) {
+            initialPlayAttempted = true;
+            video.play().catch(() => {});
+        }
+    }, 1000);
     
     // Mute button handling
     if (muteBtn) {
