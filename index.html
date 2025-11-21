@@ -394,22 +394,24 @@
                 </div>
                 <div class="contact-form">
                     <form id="contactForm">
-                        <input type="text" placeholder="Your Name / Venue Name" required>
-                        <input type="email" placeholder="Your Email" required>
-                        <input type="tel" placeholder="Your Phone">
-                        <select>
-                            <option>Select Service Type</option>
-                            <option>Book from Portfolio</option>
-                            <option>Custom Experience</option>
-                            <option>Corporate Event</option>
-                            <option>Wedding</option>
-                            <option>Gallery Opening</option>
-                            <option>Other</option>
+                        <input type="hidden" name="access_key" value="9a6c387e-3e54-427d-a08b-40bb1a9c0d4f">
+                        <input type="hidden" name="subject" value="New Contact Form Submission - Royal Jelly Events">
+                        <input type="text" name="name" placeholder="Your Name / Venue Name" required>
+                        <input type="email" name="email" placeholder="Your Email" required>
+                        <input type="tel" name="phone" placeholder="Your Phone">
+                        <select name="service_type">
+                            <option value="">Select Service Type</option>
+                            <option value="Book from Portfolio">Book from Portfolio</option>
+                            <option value="Custom Experience">Custom Experience</option>
+                            <option value="Corporate Event">Corporate Event</option>
+                            <option value="Wedding">Wedding</option>
+                            <option value="Gallery Opening">Gallery Opening</option>
+                            <option value="Other">Other</option>
                         </select>
-                        <textarea placeholder="Tell us about your event, venue, or vision" rows="5" required></textarea>
+                        <textarea name="message" placeholder="Tell us about your event, venue, or vision" rows="5" required></textarea>
                         <div class="gdpr-consent">
                             <label for="gdpr-consent" class="gdpr-label">
-                                <input type="checkbox" id="gdpr-consent" name="gdpr-consent" required>
+                                <input type="checkbox" id="gdpr-consent" name="gdpr-consent" value="yes" required>
                                 <span class="gdpr-text">
                                     I agree to the <a href="privacy.html" target="_blank">Privacy Policy</a> and consent to the processing of my personal data for the purpose of responding to my inquiry. I understand that I can withdraw my consent at any time.
                                 </span>

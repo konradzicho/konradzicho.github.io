@@ -280,27 +280,7 @@ window.addEventListener('load', () => {
     }
 });
 
-// Contact Form Handling
-const contactForm = document.getElementById('contactForm');
-if (contactForm) {
-    contactForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const formData = new FormData(contactForm);
-        const data = Object.fromEntries(formData);
-        
-        // Basic validation
-        if (!data.name || !data.email || !data.message) {
-            alert('Please fill in all required fields.');
-            return;
-        }
-        
-        // Here you would typically send the data to a server
-        // For now, we'll just show a success message
-        alert('Thank you for your message! We will get back to you soon.');
-        contactForm.reset();
-    });
-}
+// Old contact form handler removed - now using web3forms integration below
 
 // Intersection Observer for fade-in animations
 const observerOptions = {
@@ -564,4 +544,92 @@ window.addEventListener('scroll', () => {
             document.body.style.overflow = '';
         });
     }
+})();
+
+// Web3Forms Integration
+(function initContactForm() {
+    const form = document.getElementById('contactForm');
+    
+    if (!form) {
+        // Form might not be on this page, that's okay
+        return;
+    }
+    
+    const submitBtn = form.querySelector('button[type="submit"]');
+    
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Read values directly from form elements to ensure we capture them
+        const nameField = form.querySelector('input[name="name"]');
+        const emailField = form.querySelector('input[name="email"]');
+        const phoneField = form.querySelector('input[name="phone"]');
+        const serviceTypeField = form.querySelector('select[name="service_type"]');
+        const messageField = form.querySelector('textarea[name="message"]');
+        const gdprField = form.querySelector('input[name="gdpr-consent"]');
+        
+        // Create FormData and manually add all values
+        const formData = new FormData();
+        
+        // Add access key
+        formData.append("access_key", "9a6c387e-3e54-427d-a08b-40bb1a9c0d4f");
+        formData.append("subject", "New Contact Form Submission - Royal Jelly Events");
+        
+        // Add all form fields with their actual values
+        if (nameField && nameField.value) {
+            formData.append("name", nameField.value);
+            // from_name is used by web3forms for email "From" header
+            formData.append("from_name", nameField.value);
+        }
+        if (emailField && emailField.value) {
+            formData.append("email", emailField.value);
+            // Note: from_email is not needed - web3forms will use the 'email' field for reply-to
+        }
+        if (phoneField && phoneField.value) {
+            formData.append("phone", phoneField.value);
+        }
+        if (serviceTypeField && serviceTypeField.value) {
+            formData.append("service_type", serviceTypeField.value);
+        }
+        if (messageField && messageField.value) {
+            formData.append("message", messageField.value);
+        }
+        if (gdprField && gdprField.checked) {
+            formData.append("gdpr-consent", gdprField.value || "yes");
+        }
+        
+        // Debug: Log what we're sending
+        console.log("Form data being sent:");
+        for (let [key, value] of formData.entries()) {
+            console.log(key + ":", value);
+        }
+        
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = "Sending...";
+        submitBtn.disabled = true;
+        
+        try {
+            const response = await fetch("https://api.web3forms.com/submit", {
+                method: "POST",
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            console.log("Response from web3forms:", data);
+            
+            if (data.success) {
+                alert("Success! Your message has been sent.");
+                form.reset();
+            } else {
+                alert("Error: " + (data.message || "Something went wrong. Please try again."));
+            }
+        } catch (error) {
+            console.error("Form submission error:", error);
+            alert("Something went wrong. Please try again.");
+        } finally {
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        }
+    });
 })();
